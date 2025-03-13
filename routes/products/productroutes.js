@@ -26,6 +26,4 @@ router.get("/getProductreview/:productid",productController.getproductreview);
 router.delete("/productreviewdelete/:reviewid",userAuthenticate,productController.DeleteProductreview);
 
 
-
-
 module.exports = router;

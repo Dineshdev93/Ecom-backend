@@ -176,7 +176,9 @@ exports.forgotpassword = async(req,res)=>{
             const setusertoken = await userDB.findByIdAndUpdate({_id:userfind._id},{verifytoken:token},{new:true});
             
             // join email path
-            const emailTemplatepath = path.join(__dirname,"../../EmailTemplate/Forgottemplate.ejs");
+            // const emailTemplatepath = path.join(__dirname,"../../EmailTemplate/Forgottemplate.ejs");
+            const emailTemplatepath = path.resolve(__dirname, "..", "..", "EmailTemplate", "Forgottemplate.ejs");
+
             const emailtemplateread = fs.readFileSync(emailTemplatepath,"utf8");
 
             console.log("sssssssss",__dirname)
