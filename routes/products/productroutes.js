@@ -14,6 +14,7 @@ router.get("/getcategory",productController.GetCategory);
 router.post("/addProducts",[adminauthenticate,productupload.single("productimage")],productController.AddProducts);
 router.get("/getProducts",productController.getAllProducts);
 router.get("/getsingleProduct/:productid",productController.getSingleProduct);
+router.get("/getAllProductswithoutPagination",productController.getAllProductswithoutPagination)
 router.delete("/products/:productid",adminauthenticate,productController.DeleteProducts);
 
 

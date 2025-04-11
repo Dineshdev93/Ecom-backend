@@ -113,6 +113,16 @@ exports.getAllProducts = async(req,res)=>{
     }
 }
 
+// get all products without pagination
+exports.getAllProductswithoutPagination = async (req, res) => {
+    try {
+      const AllProducts = await productsdb.find();
+      res.status(200).json({ AllProducts });
+    } catch (error) {
+      res.status(400).json(error);
+    }
+  };
+
 // getSingleProduct
 exports.getSingleProduct = async(req,res)=>{
     const {productid} = req.params;
