@@ -15,6 +15,7 @@ router.post("/addProducts",[adminauthenticate,productupload.single("productimage
 router.get("/getProducts",productController.getAllProducts);
 router.get("/getsingleProduct/:productid",productController.getSingleProduct);
 router.get("/getAllProductswithoutPagination",productController.getAllProductswithoutPagination)
+router.get('/searchProduct',productController.searchProduct)
 router.delete("/products/:productid",adminauthenticate,productController.DeleteProducts);
 
 

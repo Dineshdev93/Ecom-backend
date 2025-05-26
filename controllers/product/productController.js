@@ -136,6 +136,26 @@ exports.getSingleProduct = async(req,res)=>{
     }
 }
 
+// Search product by name and desc
+// Get all products without pagination, with search
+exports.searchProduct = async (req, res) => {
+  try {
+    const searchQuery = req.query.search || "";
+
+    const AllProducts = await productsdb.find({
+      $or: [
+        { productname: { $regex: searchQuery, $options: "i" } },
+        { description: { $regex: searchQuery, $options: "i" } },
+      ],
+    });
+    res.status(200).json({ AllProducts });
+  } catch (error) {
+    res.status(400).json({ message: "Failed to fetch products", error });
+  }
+};
+
+
+
 // getLatestProducts
 exports.getLatestProducts = async(req,res)=>{
     try {

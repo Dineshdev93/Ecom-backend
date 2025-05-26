@@ -103,6 +103,7 @@ exports.userverify = async(req,res)=>{
 }
 
 
+// update user
 exports.updateUser = async (req, res) => {
     const userId = req.params.userId;
     const { firstname, lastname } = req.body;
@@ -141,8 +142,6 @@ exports.updateUser = async (req, res) => {
         return res.status(500).json({ error: "Internal Server Error", details: error.message });
     }
 };
-
-
 
 
 // logout
