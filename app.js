@@ -14,8 +14,6 @@ const port = 4009
 
 app.use(express.json());
 
-// https://ecom-backend-iie5.onrender.com
-
 // admin routes
 const adminAuthroutes = require("./routes/admin/adminAuthroutes");
 app.use("/adminauth/api",adminAuthroutes);
