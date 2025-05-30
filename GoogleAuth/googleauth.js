@@ -11,8 +11,8 @@ const FRONTEND_DEV_URL = process.env.FRONTEND_DEV_URL;
 const FRONTEND_PROD_URL = process.env.FRONTEND_PROD_URL;
 const Node_Env = process.env.NODE_ENV;
 
-const Redirect_Url = Node_Env === "development" ?    FRONTEND_DEV_URL : FRONTEND_PROD_URL;
-// const Redirect_Url =  FRONTEND_PROD_URL;
+// const Redirect_Url = Node_Env === "development" ?    FRONTEND_DEV_URL : FRONTEND_PROD_URL;
+const Redirect_Url =  FRONTEND_PROD_URL;
 
 
 function configureGoogleAuth(app) {
