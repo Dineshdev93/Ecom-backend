@@ -1,4 +1,5 @@
 // googleAuth.js
+require("dotenv").config()
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const session = require("express-session");
