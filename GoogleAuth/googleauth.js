@@ -13,6 +13,7 @@ const SECRET_KEY = process.env.USER_SECRET_KEY;
 const Redirect_Url = process.env.NODE_ENV === "development"
   ? process.env.FRONTEND_DEV_URL
   : process.env.FRONTEND_PROD_URL;
+// const Redirect_Url = process.env.FRONTEND_DEV_URL
 
 function configureGoogleAuth(app) {
   app.use(session({
@@ -62,7 +63,7 @@ function configureGoogleAuth(app) {
 
   passport.serializeUser((user, done) => done(null, user));
   passport.deserializeUser((user, done) => done(null, user));
-
+   
   // Google Auth Routes
   app.get('/auth/google', passport.authenticate("google", { scope: ["profile", "email"] }));
 
