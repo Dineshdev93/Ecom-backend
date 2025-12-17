@@ -5,21 +5,21 @@ const productreviewdb = require("../../model/product/productreviewModel");
 
 
 // add category
-exports.AddCategory = async(req,res)=>{
-    const {categoryname,description} = req.body;
+exports.AddCategory = async (req, res) => {
+    const { categoryname, description } = req.body;
 
-    if(!categoryname || !description){
-        res.status(400).json({error:"Fill All Details"})
+    if (!categoryname || !description) {
+        return res.status(400).json({ error: "Fill All Details" })
     }
 
     try {
-        const existingcategory = await categorydb.findOne({categoryname:categoryname});
+        const existingcategory = await categorydb.findOne({ categoryname: categoryname });
 
-        if(existingcategory){
-            res.status(400).json({error:"This Category Already Exist"});
-        }else{
+        if (existingcategory) {
+            res.status(400).json({ error: "This Category Already Exist" });
+        } else {
             const addCategory = new categorydb({
-               categoryname,description
+                categoryname, description
             });
 
             await addCategory.save();
@@ -33,47 +33,47 @@ exports.AddCategory = async(req,res)=>{
 }
 
 // GetCategory
-exports.GetCategory = async(req,res)=>{
+exports.GetCategory = async (req, res) => {
     try {
         const getAllcategory = await categorydb.find();
         res.status(200).json(getAllcategory)
     } catch (error) {
-        res.status(400).json(error)  
+        res.status(400).json(error)
     }
 }
 
 // AddProducts
-exports.AddProducts = async(req,res)=>{
-    const {categoryid} = req.query;
-    const file = req.file ? req.file.path :""
-    const {productname,price,discount,quantity,description} = req.body;
+exports.AddProducts = async (req, res) => {
+    const { categoryid } = req.query;
+    const file = req.file ? req.file.path : ""
+    const { productname, price, discount, quantity, description } = req.body;
 
-    if(!productname || !price || !discount || !quantity || !description || !file){
-       return  res.status(400).json({error:"all filed required"});
+    if (!productname || !price || !discount || !quantity || !description || !file) {
+        return res.status(400).json({ error: "all filed required" });
     }
 
     try {
         const upload = await cloudinary.uploader.upload(file);
 
-        const existingProduct = await productsdb.findOne({productname:productname});
+        const existingProduct = await productsdb.findOne({ productname: productname });
 
-        if(existingProduct){
-          return  res.status(400).json({error:"THis Product Already Exist"});
-        }else{
+        if (existingProduct) {
+            return res.status(400).json({ error: "THis Product Already Exist" });
+        } else {
             const addProduct = new productsdb({
-                productname,price,discount,quantity,description,categoryid,productimage:upload.secure_url
+                productname, price, discount, quantity, description, categoryid, productimage: upload.secure_url
             });
 
             await addProduct.save();
-           return res.status(200).json(addProduct)
+            return res.status(200).json(addProduct)
         }
     } catch (error) {
-       return res.status(400).json(error);
+        return res.status(400).json(error);
     }
 }
 
 // getAllProducts
-exports.getAllProducts = async(req,res)=>{
+exports.getAllProducts = async (req, res) => {
 
     const categoryid = req.query.categoryid || ""
     const page = req.query.page || 1;
@@ -81,11 +81,11 @@ exports.getAllProducts = async(req,res)=>{
 
     const query = {}
 
-    if(categoryid !== "all" && categoryid){
+    if (categoryid !== "all" && categoryid) {
         query.categoryid = categoryid
     }
 
-    
+
     try {
 
         const skip = (page - 1) * ITEM_PER_PAGE // (3 - 1) * 8 = 8
@@ -96,71 +96,72 @@ exports.getAllProducts = async(req,res)=>{
 
 
         const getAllProducts = await productsdb.find(query)
-        .limit(ITEM_PER_PAGE)
-        .skip(skip);
+            .limit(ITEM_PER_PAGE)
+            .skip(skip);
 
-        const pageCount = Math.ceil(count/ITEM_PER_PAGE); // 2/8 = 1/4 = 0.25 = 1 
-    
-        
-        res.status(200).json({getAllProducts,
-            Pagination:{
-                totalProducts:count,pageCount
+        const pageCount = Math.ceil(count / ITEM_PER_PAGE); // 2/8 = 1/4 = 0.25 = 1 
+
+
+        res.status(200).json({
+            getAllProducts,
+            Pagination: {
+                totalProducts: count, pageCount
             }
         })
     } catch (error) {
         res.status(400).json(error);
-        
+
     }
 }
 
 // get all products without pagination
 exports.getAllProductswithoutPagination = async (req, res) => {
     try {
-      const AllProducts = await productsdb.find();
-      res.status(200).json({ AllProducts });
+        const AllProducts = await productsdb.find();
+        res.status(200).json({ AllProducts });
     } catch (error) {
-      res.status(400).json(error);
+        res.status(400).json(error);
     }
-  };
+};
 
 // getSingleProduct
-exports.getSingleProduct = async(req,res)=>{
-    const {productid} = req.params;
+exports.getSingleProduct = async (req, res) => {
+    const { productid } = req.params;
 
     try {
-        const getSingleProductdata = await productsdb.findOne({_id:productid});
+        const getSingleProductdata = await productsdb.findOne({ _id: productid });
         res.status(200).json(getSingleProductdata)
     } catch (error) {
         res.status(400).json(error);
-        
+
     }
 }
 
 // Search product by name and desc
 // Get all products without pagination, with search
 exports.searchProduct = async (req, res) => {
-  try {
-    const searchQuery = req.query.search || "";
+    try {
+        const searchQuery = req.query.search || "";
 
-    const AllProducts = await productsdb.find({
-      $or: [
-        { productname: { $regex: searchQuery, $options: "i" } },
-        { description: { $regex: searchQuery, $options: "i" } },
-      ],
-    });
-    res.status(200).json({ AllProducts });
-  } catch (error) {
-    res.status(400).json({ message: "Failed to fetch products", error });
-  }
+        const AllProducts = await productsdb.find({
+            $or: [
+                { productname: { $regex: searchQuery, $options: "i" } },
+                { description: { $regex: searchQuery, $options: "i" } },
+            ],
+        });
+        res.status(200).json({ AllProducts });
+    } catch (error) {
+        res.status(400).json({ message: "Failed to fetch products", error });
+    }
 };
 
 
 
 // getLatestProducts
-exports.getLatestProducts = async(req,res)=>{
+exports.getLatestProducts = async (req, res) => {
     try {
         const getNewProducts = await productsdb.find()
-        .sort({_id:-1});
+            .sort({ _id: -1 });
         res.status(200).json(getNewProducts)
     } catch (error) {
         res.status(400).json(error);
@@ -169,10 +170,10 @@ exports.getLatestProducts = async(req,res)=>{
 
 
 // DeleteProducts
-exports.DeleteProducts = async(req,res)=>{
-    const {productid} = req.params;
+exports.DeleteProducts = async (req, res) => {
+    const { productid } = req.params;
     try {
-        const deleteProducts = await productsdb.findByIdAndDelete({_id:productid});
+        const deleteProducts = await productsdb.findByIdAndDelete({ _id: productid });
         res.status(200).json(deleteProducts);
     } catch (error) {
         res.status(400).json(error);
@@ -181,16 +182,16 @@ exports.DeleteProducts = async(req,res)=>{
 
 
 // productreview
-exports.productreview = async(req,res)=>{
-    const {productid} = req.params;
-    const {username,rating,description} = req.body;
+exports.productreview = async (req, res) => {
+    const { productid } = req.params;
+    const { username, rating, description } = req.body;
 
-    if(!username || !rating || !description || !productid){
-        res.status(400).json({error:"All Field is Required"})
+    if (!username || !rating || !description || !productid) {
+        return res.status(400).json({ error: "All Field is Required" })
     }
     try {
         const productreviewadd = new productreviewdb({
-            userid:req.userMainId,productid,username,rating,description
+            userid: req.userMainId, productid, username, rating, description
         });
 
         await productreviewadd.save(productreviewadd);
@@ -202,10 +203,10 @@ exports.productreview = async(req,res)=>{
 }
 
 // getproductreview
-exports.getproductreview = async(req,res)=>{
-    const {productid} = req.params;
+exports.getproductreview = async (req, res) => {
+    const { productid } = req.params;
     try {
-        const getreview = await productreviewdb.find({productid:productid});
+        const getreview = await productreviewdb.find({ productid: productid });
         res.status(200).json(getreview)
     } catch (error) {
         res.status(400).json(error);
@@ -213,10 +214,10 @@ exports.getproductreview = async(req,res)=>{
 }
 
 // DeleteProductreview
-exports.DeleteProductreview = async(req,res)=>{
-    const {reviewid} = req.params;
+exports.DeleteProductreview = async (req, res) => {
+    const { reviewid } = req.params;
     try {
-        const reviewDelete = await productreviewdb.findByIdAndDelete({_id:reviewid});
+        const reviewDelete = await productreviewdb.findByIdAndDelete({ _id: reviewid });
         res.status(200).json(reviewDelete)
     } catch (error) {
         res.status(400).json(error);

@@ -2,15 +2,16 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
 
 
 // payment controller
-exports.processpayment = async(req,res)=>{
-    const {totalamount} = req.body;
+exports.processpayment = async (req, res) => {
+    const { totalamount } = req.body;
+    console.log("Stripe Key present:", !!process.env.STRIPE_SECRET_KEY); // Debug log
 
     try {
         const myPayment = await stripe.paymentIntents.create({
-            amount:totalamount,
-            currency:"inr",
-            metadata:{
-                company:"EcommerceProject"
+            amount: totalamount,
+            currency: "inr",
+            metadata: {
+                company: "EcommerceProject"
             }
         });
 

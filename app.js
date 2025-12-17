@@ -15,39 +15,39 @@ app.use(cors({
   origin: allowedOrigins,
   credentials: true, // only if using cookies/session
 }));
-const port = 4009 
+const port = process.env.PORT || 4009
 
 app.use(express.json());
 
 // admin routes
 const adminAuthroutes = require("./routes/admin/adminAuthroutes");
-app.use("/adminauth/api",adminAuthroutes);
+app.use("/adminauth/api", adminAuthroutes);
 
 // productsroutes
 const productroutes = require("./routes/products/productroutes");
-app.use("/product/api",productroutes);
+app.use("/product/api", productroutes);
 
 // user routes
 const userAuthroutes = require("./routes/user/userAuthRoutes");
-app.use("/userauth/api",userAuthroutes);
+app.use("/userauth/api", userAuthroutes);
 
 // carts routes
 const cartsroutes = require("./routes/carts/cartsroutes");
-app.use("/carts/api",cartsroutes);
+app.use("/carts/api", cartsroutes);
 
 // payment routes
 const paymentroutes = require("./routes/payment/PaymentRoutes");
-app.use("/checkout/api",paymentroutes);
+app.use("/checkout/api", paymentroutes);
 
 // order routes
 const orderroutes = require("./routes/order/orderRoutes");
-app.use("/order/api",orderroutes)
+app.use("/order/api", orderroutes)
 
-app.get("/",(req,res)=>{
-    res.status(200).json("server start");
+app.get("/", (req, res) => {
+  res.status(200).json("server start");
 })
 
 // start server
-app.listen(port,()=>{
-    console.log(`server start at port no ${port}`)
+app.listen(port, () => {
+  console.log(`server start at port no ${port}`)
 })

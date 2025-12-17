@@ -63,7 +63,7 @@ function configureGoogleAuth(app) {
 
   passport.serializeUser((user, done) => done(null, user));
   passport.deserializeUser((user, done) => done(null, user));
-   
+
   // Google Auth Routes
   app.get('/auth/google', passport.authenticate("google", { scope: ["profile", "email"] }));
 
